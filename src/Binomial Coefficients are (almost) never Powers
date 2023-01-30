@@ -1,0 +1,36 @@
+/- Imports -/
+import tactic
+import tactic.qify
+
+import ring_theory.prime
+import ring_theory.multiplicity
+
+import data.list.prime
+import data.nat.sqrt
+
+open nat 
+open finset
+open_locale nat big_operators
+/-
+# Sylvester's Theorem
+-/
+theorem sylvester (k n : ℕ) (h : n ≥ 2*k): ∃ p, p > k ∧ prime p ∧ p ∣ choose n k :=
+begin
+  sorry,
+end
+/-
+# Legendre's Theorem
+-/
+theorem legendre {p : ℕ} (hp : prime p) : ∀ {n b : ℕ}, log p n < b → 
+  multiplicity p n! = (∑ i in Ico 1 b, n / p ^ i : ℕ) :=
+begin
+  sorry,
+end
+/-
+# Erdos' Theorem
+-/
+theorem binomials_coefficients_never_powers (k l m n : ℕ) (h_2lel : 2 ≤ l) (h_4lek : 4 ≤ k)
+(h_klen4 : k ≤ n - 4) : choose n k ≠ m^l :=
+begin 
+  sorry,
+end
