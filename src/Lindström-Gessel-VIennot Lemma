@@ -1,3 +1,4 @@
+/- Imports -/
 import tactic
 
 import data.rel
@@ -299,8 +300,8 @@ def path_system.sign {α : Type*} [fintype α] [decidable_eq α] {A B : α ↪ V
   (s : G.path_system A B) :=
 s.σ.sign 
 
-def all_path_systems (G : directed_simple_graph V) (A B : α ↪ V) : finset (G.path_system A B) :=
-sorry
+def all_path_systems (G : directed_simple_graph V) (A B : α ↪ V) : 
+finset (G.path_system A B) := sorry
 /-
 # Weights
 -/
@@ -334,7 +335,8 @@ def path_matrix_map {α : Type*} [fintype α] [decidable_eq α] (A B : α ↪ V)
   (weight : G.edge_set → R) : α → α → R :=
 λ i j, all_paths_ij_weight A B i j weight
 
-def path_matrix (G : directed_simple_graph V) (A B : α ↪ V) (weight : G.edge_set → R) : 
+def path_matrix (G : directed_simple_graph V) (A B : α ↪ V) 
+  (weight : G.edge_set → R) : 
 matrix α α R := matrix.of (path_matrix_map G A B weight)
 
 end directed_walk
