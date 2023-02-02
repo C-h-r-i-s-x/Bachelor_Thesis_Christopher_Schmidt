@@ -28,6 +28,9 @@ namespace directed_simple_graph
 
 variable {V : Type u}
 variable (G : directed_simple_graph V)
+
+/- Not useful. -/
+def directed_simple_graph2 : Type u → Type u → Type := λ V V, Prop 
 /-
 ## Directed *Loopless* Simple Graph
 -/
