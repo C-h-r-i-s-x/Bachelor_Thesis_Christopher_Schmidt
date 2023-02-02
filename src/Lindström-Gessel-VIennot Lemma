@@ -185,7 +185,7 @@ G.directed_walk u w := directed_walk.cons h p
 /-- A `directed acyclic simple graph`. -/
 @[ext]
 structure directed_acyclic_simple_graph 
-  (V : Type u) {G : directed_simple_graph V}
+  (V : Type u) (G : directed_simple_graph V)
   extends directed_simple_graph V :=
 (acyclic : ∀ v : V, (∀ p : G.directed_walk v v, p = nil))
 /-
@@ -195,7 +195,7 @@ structure directed_acyclic_simple_graph
 /-- A `directed acyclic loopless finite simple graph`. -/
 @[ext]
 structure directed_acyclic_loopless_finite_simple_graph 
-  (V : Type u) {G : directed_simple_graph V}
+  (V : Type u) (G : directed_simple_graph V)
   extends directed_simple_graph V :=
 (finite : fintype V)
 (loopless : irreflexive adj . obviously)
@@ -203,6 +203,7 @@ structure directed_acyclic_loopless_finite_simple_graph
 /-
 ## Directed Walk Support, Darts, Edges, Edges Set
 -/
+
 /-- The `support` of a directed walk is the list of vertices it visits in order. -/
 def support : Π {u v : V}, G.directed_walk u v → list V
 | u _ nil := [u]
@@ -277,55 +278,9 @@ end directed_simple_graph
 namespace directed_simple_graph
 
 variables {V : Type u} {u v w: V} 
-variables {k : ℕ} 
-variables {α : Type*} [fintype α]
+variables {α : Type*} [fintype α] [decidable_eq α]
 variables (G : directed_simple_graph V)
 
-/- First Approach. -/
-structure path_system {α : Type*} [fintype α] (A B : α ↪ V) :=
-(B' : α ↪ V)
-(range_B' : set.range B' = set.range B)
-(path : Π (i : α), G.directed_path (A i) (B' i))
-(walk_disj : ∀ (i j : α), i ≠ j → list.disjoint (path i).1.support (path j).1.support)
-
-/- Second Approach. -/
-structure path_system2 {α : Type*} [fintype α] (A B : α ↪ V) :=
-(σ : equiv.perm α)
-(path : Π (i : α), G.directed_path (A i) (B (σ i)))
-(walk_disj : ∀ (i j : α), i ≠ j → list.disjoint (path i).1.support (path j).1.support)
-
-variables {G}
-
-/- First Approach. -/
-noncomputable def path_system.σ {α : Type*} [fintype α] {A B : α ↪ V} (s : G.path_system A B) : α ≃ α :=
-(equiv.of_injective s.B' s.B'.inj').trans
-  ((equiv.set.of_eq s.range_B').trans (equiv.of_injective B B.inj').symm)
-
-noncomputable def path_system.sign {α : Type*} [fintype α] {A B : α ↪ V} (s : G.path_system A B) :=
-equiv.perm.sign s.σ
-
-/- Second Approach. -/
--- This definition is not actually necessary since one can write `s.σ.sign` just as easily as `s.sign`.
-noncomputable def path_system2.sign {α : Type*} [fintype α] {A B : α ↪ V} (s : G.path_system2 A B) :=
-s.σ.sign 
-
-def all_path_systems {G : directed_simple_graph V} (A B : α ↪ V) : finset (G.path_system2 A B) :=
-sorry
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- /--
 /-- A `path system from A to B`. -/
 structure path_system {α : Type*} [fintype α] (A B : α ↪ V) :=
 (σ : equiv.perm α)
@@ -344,16 +299,66 @@ def path_system.sign {α : Type*} [fintype α] [decidable_eq α] {A B : α ↪ V
   (s : G.path_system A B) :=
 s.σ.sign 
 
---variables {α : Type*} [fintype α] 
-variables {A B : α ↪ V}
-variable {psyst : G.path_system A B}
-#check psyst.1
+def all_path_systems (G : directed_simple_graph V) (A B : α ↪ V) : finset (G.path_system A B) :=
+sorry
+/-
+# Weights
+-/
+namespace directed_walk
 
---[decidable_eq α]
+variables {R : Type} [field R]
 
-variables {β : Type*} [fintype β] [decidable_eq β]
-variable {test : equiv.perm β} 
-#check equiv.perm.sign test
-#check β
+def walk_weight {G : directed_simple_graph V} 
+  (weight : G.edge_set → R) : Π {u v : V}, G.directed_walk u v → R
+| u v nil := 1
+| u v (cons h p) := weight ⟨(u, _), h⟩ * walk_weight p
 
-end directed_simple_graph--/
+def path_weight {G : directed_simple_graph V} 
+  (weight : G.edge_set → R) : G.directed_path u v → R :=
+λ p, walk_weight weight (p.1)
+
+def path_system_weight {α : Type*} [fintype α] (G : directed_simple_graph V) 
+  (weight : G.edge_set → R) (A B : α ↪ V) : G.path_system A B → R :=
+λ s, ∏ (i : α), path_weight weight (s.path i)
+/-
+# Path Matrix
+-/
+def all_path_ij {G : directed_simple_graph V} (A B : α ↪ V) (i j : α) : 
+finset (G.directed_path (A i) (B j)) := sorry
+
+def all_paths_ij_weight {G : directed_simple_graph V} (A B : α ↪ V) (i j : α) 
+  (weight : G.edge_set → R) : R := 
+∑ (p : (all_path_ij A B i j)), path_weight weight p.1
+
+def path_matrix_map {α : Type*} [fintype α] [decidable_eq α] (A B : α ↪ V) 
+  (weight : G.edge_set → R) : α → α → R :=
+λ i j, all_paths_ij_weight A B i j weight
+
+def path_matrix (G : directed_simple_graph V) (A B : α ↪ V) (weight : G.edge_set → R) : 
+matrix α α R := matrix.of (path_matrix_map G A B weight)
+
+end directed_walk
+end directed_simple_graph
+/-
+## Lindström-Gessel-Viennot Lemma
+-/
+namespace directed_simple_graph
+namespace directed_walk 
+
+lemma Lindstroem_Gessel_Viennot
+  (V : Type u) (u v : V) (G : directed_simple_graph V) 
+  (g : directed_acyclic_loopless_finite_simple_graph V G)
+  (α : Type*) [fintype α] [decidable_eq α] (A B : α ↪ V) (i j : α) 
+  (R : Type) [field R] (r : R)
+  (weight : g.to_directed_simple_graph.edge_set → R) :
+
+  (path_matrix g.to_directed_simple_graph A B weight).det = 
+  ∑ (s : all_path_systems g.to_directed_simple_graph A B), 
+    (s.1.σ.sign) * (path_system_weight g.to_directed_simple_graph weight A B s.1) :=
+  
+begin 
+  sorry
+end 
+
+end directed_walk
+end directed_simple_graph
