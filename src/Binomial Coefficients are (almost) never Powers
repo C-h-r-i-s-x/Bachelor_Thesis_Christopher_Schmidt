@@ -257,7 +257,7 @@ begin
     { cases (sylvester k n h) with p hp,
       cases hp with h_klp h_right,
       cases h_right with h_p h_p_div_binom,
-      -- now we have p : ℕ , h_p : prime p , h_pdivbinom : p | n.choose k
+      -- now we have p : ℕ , h_p : prime p , h_p_div_binom : p | n.choose k
       -- we want to use the from sylvester's theorem obtained p for our proof
       use p,
       split,
@@ -287,11 +287,6 @@ begin
           { exact nat.pow_lt_pow_of_lt_left (h_klp)(gt_of_ge_of_gt h_2lel two_pos), },
           -- prove k² ≤ k^l
           { exact nat.pow_le_pow_of_le_right (pos_of_gt h_4lek) h_2lel,  }, }, }, },
-
-
-
-
-
     sorry, },
   cases em (n ≥ 2*k) with h_2k,
   { exact h_wlog k h_4lek h_klen4 h_2k},
