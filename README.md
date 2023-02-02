@@ -3,13 +3,16 @@
 ## Data
 Author : Christopher Schmidt
 
-Date   : TBC
+Date   : 25.02.23
 
 ## "Binomial Coefficients are (almost) never Powers"
 Includes the Lean Code ragarding this theorem.
 
-## "Lattice Paths and Determinants"
-Includes the Lean Code regarding this lemma.
+## "Lindström-Gessel-Viennot Lemma "
+Includes the Lean Code regarding this lemma shown in the Thesis.
+
+## "Lindström-Gessel-Viennot Lemma (complete)"
+Include the complete Lean Code regarding this lemma and some other useful stuff.
 
 ## Disclaimer
-The code was written under the supervision of Moritz Firsching. His Repository "formal_book" (https://github.com/mo271/formal_book) uses the here shown code and ideas (and most likely embodys a newer version). 
+Moritz Firsching contributed to the Code contained in "Binomial Coefficients are (almost) never Powers". His Repository "formal_book" (https://github.com/mo271/formal_book) uses the here shown code and ideas (and most likely embodys a newer version). 
