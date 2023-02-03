@@ -39,22 +39,6 @@ def directed_simple_graph2 : Type u → Type u → Type := λ V V, Prop
 structure directed_loopless_simple_graph (V : Type u)
   extends directed_simple_graph V :=
 (loopless : irreflexive adj . obviously)
-
-namespace directed_loopless_simple_graph
-
-@[simp] protected lemma irrefl {v : V} {G : directed_loopless_simple_graph V} : 
-¬G.adj v v := G.loopless v
-
-lemma ne_of_adj {v w : V} {G : directed_loopless_simple_graph V} (h : G.adj v w) : 
-v ≠ w := by { rintro rfl, exact directed_loopless_simple_graph.irrefl h}
-
-protected lemma adj.ne {G : directed_loopless_simple_graph V} {v w : V} 
-(h : G.adj v w) : v ≠ w := ne_of_adj h
-
-protected lemma adj.ne' {G : directed_loopless_simple_graph V} {v w : V} 
-(h : G.adj v w) : w ≠ v := (adj.ne h).symm
-
-end directed_loopless_simple_graph
 /-
 ## Directed *Finite* Simple Graph
 -/
@@ -263,7 +247,8 @@ decidable p.is_directed_path := by { rw is_directed_path_def, apply_instance }
 end directed_walk
 
 /-- The type for paths between two vertices. -/
-abbreviation directed_path (u v : V) := {p : G.directed_walk u v // p.is_directed_path}
+abbreviation directed_path (u v : V) := 
+{p : G.directed_walk u v // p.is_directed_path}
 
 namespace directed_path
 variables {G}
@@ -303,8 +288,8 @@ def path_system.sign {α : Type*} [fintype α] [decidable_eq α] {A B : α ↪ V
   (s : G.path_system A B) :=
 s.σ.sign 
 
-def all_path_systems (G : directed_simple_graph V) (A B : α ↪ V) : 
-finset (G.path_system A B) := sorry
+def all_vd_path_systems (G : directed_simple_graph V) (A B : α ↪ V) : 
+finset (G.vd_path_system A B) := sorry
 /-
 # Weights
 -/
@@ -358,8 +343,8 @@ lemma Lindstroem_Gessel_Viennot
   (weight : g.to_directed_simple_graph.edge_set → R) :
 
   (path_matrix g.to_directed_simple_graph A B weight).det = 
-  ∑ (s : all_path_systems g.to_directed_simple_graph A B), 
-    (s.1.σ.sign) * (path_system_weight g.to_directed_simple_graph weight A B s.1) :=
+  ∑ (s : all_vd_path_systems g.to_directed_simple_graph A B), 
+    (s.1.σ.sign) * (path_system_weight g.to_directed_simple_graph weight A B s.1.1) :=
   
 begin 
   sorry
