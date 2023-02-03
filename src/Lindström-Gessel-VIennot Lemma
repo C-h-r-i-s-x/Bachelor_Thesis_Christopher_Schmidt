@@ -205,7 +205,7 @@ structure directed_acyclic_loopless_finite_simple_graph
 (loopless : irreflexive adj . obviously)
 (acyclic : ∀ v : V, (∀ p : G.directed_walk v v, p = nil))
 /-
-## Directed Walk Support, Darts, Edges, Edges Set
+## Directed Walk Support, Darts, Edges
 -/
 
 /-- The `support` of a directed walk is the list of vertices it visits in order. -/
