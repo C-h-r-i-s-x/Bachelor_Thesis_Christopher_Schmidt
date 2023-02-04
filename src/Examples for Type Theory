@@ -1,4 +1,3 @@
-import tactic
 open nat
 
 #check ℕ      -- N : Type
