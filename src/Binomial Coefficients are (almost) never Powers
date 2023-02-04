@@ -46,7 +46,7 @@ begin
       have h_p_div_m : p ∣ m := prime.dvd_of_dvd_pow (h_p)(h_p_div_binom),
       exact pow_dvd_pow_of_dvd h_p_div_m l, },
     exact h_pl_div_binom, },
-  -- using qify to handle devision and to rewrite h_pl_div_fac to
+  -- using qify to handle division and to rewrite h_pl_div_fac to
   -- p^l ∣ n! / (n-k)! / k!
   have h_fraction: (n.factorial / (k.factorial * (n - k).factorial)) =
     (n.factorial / (n - k).factorial) / k.factorial := by
@@ -204,9 +204,6 @@ begin
     refine ⟨i, _⟩,
     simp only [true_and, exists_unique_iff_exists, exists_prop, and_imp],
     exact h_unique, },
-  --
-  have h : ∃ j1 j2, p ∣ (n - j1) ∧ p ∣ (n - j2) → j1 = j2 := by
-  {  sorry, },
   -- ∃ i : p^l ∣ (n-i)
   simp only [mem_range, exists_unique_iff_exists, exists_prop] at h_one_fac,
   cases h_one_fac with i h_one_fac',
