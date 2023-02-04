@@ -1,0 +1,84 @@
+import tactic
+open nat
+
+#check ℕ      -- N : Type
+#check Type   -- Type : Type 1
+#check Type 1 -- Type 1 : Type 2 
+
+constant T : Type
+#check T -- T : Type
+
+constant t : T
+#check t -- t : T
+
+--constant x : t -- error
+
+constant f : ℕ → ℕ
+#check f -- f : ℕ → ℕ 
+
+#check ℕ → ℕ -- ℕ → ℕ : Type     
+
+constant l : list ℕ
+#check l      -- l : list ℕ
+#check list ℕ -- list ℕ : Type
+#check list   -- list : Type u_1 → Type u_1  
+
+constant p : Prop
+constant z : p
+#check z    -- z : p
+#check p    -- p : Prop
+#check Prop -- Prop : type
+
+def fct : ℕ → ℕ := λ x, 2*x+7  
+
+inductive naturals : Type
+| zero : naturals
+| succ : naturals → naturals 
+
+structure point (α : Type*) :=
+mk :: (x : α) (y : α)
+
+#check point    -- point : Type u_1 → Type u_1
+#check point.x  -- point.x : point ?M_1 → ?M_1
+#check point.y  -- point.y : point ?M_1 → ?M_1
+
+def poi := point.mk 10 20
+
+#check poi.x   -- ℕ
+#reduce poi.x  -- 10
+#reduce poi.y  -- 20
+
+universe u
+
+structure directed_simple_graph (V : Type u) :=
+(adj : V → V → Prop)
+
+#check directed_simple_graph -- simple_graph : Type u_1 → u_1
+
+variable {V : Type u}
+variable {G : directed_simple_graph V}
+
+#check G     -- G : simple_graph V
+#check G.1   -- G.adj : V → V → Prop 
+#check G.adj -- G.adj : V → V → Prop
+
+variables {v1 v2 : V}
+
+variables {g : directed_simple_graph.adj G v1 v2}
+variables {g': G.adj v1 v2}
+def g'' := directed_simple_graph.adj G v1 v2
+
+#check g    -- g  : G.adj v1 v2
+#check g'   -- g' : G.adj v1 v2
+#check g''  -- g'': Prop
+#reduce g'' -- ?M_2.adj ?M_3 ?M_4
+
+constant p2 : Prop 
+def adjacency : V → V → Prop := λ v w, p2
+
+#check directed_simple_graph.mk adjacency 
+-- {adj := adjacency ?M_1} : directed_simple_graph ?M_1
+
+def gx : directed_simple_graph V := directed_simple_graph.mk adjacency
+#check gx   -- gx : directed_simple_graph ?M_1
+#reduce gx  -- {adj := λ (v1 : ?M_1) (v2 : ?M_1[v1]), p2}
