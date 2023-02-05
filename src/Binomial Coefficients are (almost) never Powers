@@ -237,9 +237,10 @@ begin
   { sorry, },
 end
 /-
-# Lemmas and Definitions Step 2 : _-_
+# Lemmas and Definitions Step 2
 -/
-definition power_div (l z : ℕ) := (finset.range (z + 1)).filter (λ i, i^l ∣ z)
+definition power_div (l z : ℕ) :=
+(finset.range (z + 1)).filter (λ i, i^l ∣ z)
 
 lemma power_div_nonempty (l z : ℕ) : (power_div l z).nonempty :=
 begin
@@ -254,14 +255,18 @@ begin
   { use 0,
     rw power_div,
     simp only [not_lt, le_zero_iff] at h,
-    simp only [mem_filter, mem_range, add_pos_iff, lt_one_iff, eq_self_iff_true, or_true, true_and],
+    simp only 
+      [mem_filter, mem_range, add_pos_iff, 
+       lt_one_iff, eq_self_iff_true, or_true, true_and],
     rw h,
     simp only [dvd_zero],},
 end
 
-definition largest_power_divisor (l z : ℕ) : ℕ := (power_div l z).max' (power_div_nonempty l z)
+definition largest_power_divisor (l z : ℕ) : ℕ :=
+(power_div l z).max' (power_div_nonempty l z)
 
-lemma largest_power_divisor_divides (l z : ℕ) : (largest_power_divisor l z)^l ∣ z :=
+lemma largest_power_divisor_divides (l z : ℕ) : 
+  (largest_power_divisor l z)^l ∣ z :=
 begin
   have h := (power_div l z).max'_mem (power_div_nonempty l z),
   rw ←largest_power_divisor at h,
