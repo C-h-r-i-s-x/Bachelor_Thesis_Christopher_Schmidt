@@ -26,7 +26,7 @@ constant p : Prop
 constant z : p
 #check z    -- z : p
 #check p    -- p : Prop
-#check Prop -- Prop : type
+#check Prop -- Prop : Type
 
 def fct : ℕ → ℕ := λ x, 2*x+7  
 
